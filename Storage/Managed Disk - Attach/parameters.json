@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DisknamePrefix":{
+            "value": "tst"
+        },
+        "diskType":{
+            "value": "Premium_LRS"
+        },
+        "diskSizeGB":{
+            "value": "32"
+        },
+        "location":{
+            "value": "CanadaCentral"
+        },
+        "VirtualMachineName":{
+            "value": "testVM"
+        },
+        "NumberOfDisks":{
+            "value": 2
+        }
+    }
+}

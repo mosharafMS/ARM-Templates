@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "value": "workspaceWithVnet2"
+      },
+      "managedResourceGroup": {
+        "value": "dbricksWithVnet2"
+      },
+      "customPublicSubnetName":
+      {
+        "value": "dbricks2Front"
+      },
+      "customPrivateSubnetName":
+      {
+        "value": "dbricks2BK"
+      }
+
+    }
+  }

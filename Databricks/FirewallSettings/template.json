@@ -1,0 +1,385 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureFirewalls_playgroundFW_name": {
+            "defaultValue": "playgroundFW",
+            "type": "String"
+        },
+        "publicIPAddresses_fwIP_externalid": {
+            "type": "String"
+        },
+        "virtualNetworks_playgroundvnet_externalid": {
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('azureFirewalls_playgroundFW_name')]",
+            "location": "canadacentral",
+            "properties": {
+                "sku": {
+                    "name": "AZFW_VNet",
+                    "tier": "Standard"
+                },
+                "threatIntelMode": "Deny",
+                "additionalProperties": {},
+                "ipConfigurations": [
+                    {
+                        "name": "IpConf",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[parameters('publicIPAddresses_fwIP_externalid')]"
+                            },
+                            "subnet": {
+                                "id": "[concat(parameters('virtualNetworks_playgroundvnet_externalid'), '/subnets/AzureFirewallSubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "networkRuleCollections": [
+                    {
+                        "name": "Databricks",
+                        "properties": {
+                            "priority": 100,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "NTP",
+                                    "protocols": [
+                                        "UDP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "destinationIpGroups": [],
+                                    "destinationFqdns": [],
+                                    "destinationPorts": [
+                                        "123"
+                                    ]
+                                },
+                                {
+                                    "name": "DifferentServices",
+                                    "protocols": [
+                                        "TCP",
+                                        "Any"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "EventHub.CanadaCentral",
+                                        "EventHub.CanadaEast",
+                                        "AzureKeyVault.CanadaCentral",
+                                        "AzureKeyVault.CanadaEast",
+                                        "Sql.CanadaCentral",
+                                        "Sql.CanadaEast",
+                                        "Storage.CanadaCentral",
+                                        "Storage.CanadaEast",
+                                        "Sql",
+                                        "EventHub"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "destinationIpGroups": [],
+                                    "destinationFqdns": [],
+                                    "destinationPorts": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "applicationRuleCollections": [
+                    {
+                        "name": "databricks",
+                        "properties": {
+                            "priority": 100,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Metastore",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "\tconsolidated-canadacentral-prod-metastore.mysql.database.azure.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "Artifact Blob storage primary",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "dbartifactsprodcacentral.blob.core.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "Artifact Blob storage secondary",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "dbartifactsprodcacentral.blob.core.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "Log Blob storage",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "dblogprodcacentral.blob.core.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "Event Hub endpoint",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "prod-canadacentral-observabilityeventhubs.servicebus.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "dbfs-workspace1",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "dbstoragemk2dbdt4ojlvg.blob.core.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "dbfs-workspace2",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "dbstoragekq2nbzchi6qy2.blob.core.windows.net"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "ubuntu-update",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "*.ubuntu.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "snap-packages",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "*.snapcraft.io"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "terracotta",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "*.terracotta.org"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "cloudflare",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "*.cloudflare.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "sts-aws",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "sts.amazonaws.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "databricks-samples1",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "databricks-datasets-oregon.s3.amazonaws.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                },
+                                {
+                                    "name": "databricks-samples2",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "databricks-datasets-oregon.s3-us-west-2.amazonaws.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "natRuleCollections": []
+            }
+        }
+    ]
+}

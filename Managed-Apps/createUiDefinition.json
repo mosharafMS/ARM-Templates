@@ -1,0 +1,151 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.1.2-preview",
+    "parameters": {
+       "basics": [ ],
+       "steps": [
+           {
+               "name": "NameAndCred",
+               "label": "Azure Managed App Step1",
+               "bladeTitle": "VM Name and Credentials",
+               "subLabel": {
+                   "preValidation": "Provide VM credentials",
+                   "postValidation": "Great..Next step"
+               },
+               "elements": [
+                {
+                    "name": "ApplicationName",
+                    "label": "Application Name",
+                    "type": "Microsoft.Common.TextBox",
+                    "visible": true
+                },
+                {
+                    "name": "vmName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Enter Virtual Machine Name",
+                    "constraints": {
+                        "required": true,
+                        "regex": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$",
+                        "validationMessage": "Please enter a valid hostName"
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "adminUserName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Enter admin user name",
+                    "visible": true,
+                    "constraints": {
+                        "required": true
+                    }
+                },
+                {
+                    "name": "adminPassword",
+                    "type": "Microsoft.Common.PasswordBox",
+                    "label": {
+                         "password": "enter password",
+                         "confirmPassword": "confirm password"
+                    },
+                    "visible": true,
+                    "constraints": {
+                        "required": true
+                    }
+                }
+               ]
+           },
+           {
+               "name": "VMSettings",
+               "label": "Virtual Machine Settings",
+               "subLabel": {
+                   "preValidation": "Configure the virtual machine settings",
+                   "postValidation": "All Done"
+               },
+               "bladeTitle": "VM Settings",
+               "elements": [
+                {
+                    "name": "vmSize",
+                    "type": "Microsoft.Compute.SizeSelector",
+                    "label": "Virtual machine size",
+                    "toolTip": "The size of the virtual machine",
+                    "recommendedSizes": [
+                        "Standard_DS1_v2"
+                    ],
+                    "constraints": {
+                        "allowedSizes": [
+                            "Standard_DS1_v2",
+                            "Standard_DS2_v2",
+                            "Standard_DS3_v2",
+                            "Standard_D2s_v3",
+                            "Standard_D4s_v3",
+                            "Standard_D8s_v3",
+                            "Standard_B2s",
+                            "Standard_B2ms",
+                            "Standard_B1ms"
+
+                        ]
+                    },
+                    "osPlatform": "Windows",
+                    "count": 1
+                },
+                {
+                    "name": "vnetSettings",
+                    "type": "Microsoft.Network.VirtualNetworkCombo",
+                    "label": {
+                        "virtualNetwork": "Choose existing vnet",
+                        "subnets": "choose subnet"
+                    },
+                    "options": {
+                        "hideExisting": false
+                    },
+                    "constraints": {
+                        "minAddressPrefixSize": "/24"
+                    },
+                    "subnets": {
+                        "subnet1":{
+                            "constraints": {
+                                "minAddressPrefixSize": "/27"
+                            },
+                            "label": "deployment subnet"
+                        }
+                    }
+                    
+                }
+                ,
+                {
+                    "name": "addPublicIP",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Add IP Address?",
+                    "visible": true,
+                    "constraints": {
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+
+                        ]
+                    }
+                }
+               ]
+           }
+           
+        ],
+       "outputs": {
+           "applicationResourceName":"[steps('NameAndCred').ApplicationName]",
+           "location":"[location()]",
+           "vNETGroupName":"[steps('VMSettings').vnetSettings.resourceGroup]",
+           "virtualMachineName":"[steps('NameAndCred').vmName]",
+           "virtualMachineSize":"[steps('VMSettings').vmSize]",
+           "adminUsername":"[steps('NameAndCred').adminUserName]",
+           "virtualNetworkName":"[steps('VMSettings').vnetSettings.name]",
+           "adminPassword":"[steps('NameAndCred').adminPassword]",
+           "subnetName":"[steps('VMSettings').vnetSettings.subnets.subnet1.name]",
+           "addPublicIP":"[bool(steps('VMSettings').addPublicIP)]"
+        }
+    }
+ }

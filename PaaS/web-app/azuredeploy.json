@@ -1,0 +1,64 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "hostingPlanName": {
+            "type": "string"
+        },
+        "hostingEnvironment": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "location": {
+            "type": "string"
+        },
+        "sku": {
+            "type": "string"
+        },
+        "skuCode": {
+            "type": "string"
+        },
+        "workerSize": {
+            "type": "string"
+        },
+        "serverFarmResourceGroup": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2016-03-01",
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Web/sites",
+            "properties": {
+                "name": "[parameters('name')]",
+                "serverFarmId": "[concat(subscription().id, '/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "hostingEnvironment": "[parameters('hostingEnvironment')]"
+            },
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            ]
+        },
+        {
+            "apiVersion": "2016-09-01",
+            "name": "[parameters('hostingPlanName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[parameters('location')]",
+            "properties": {
+                "name": "[parameters('hostingPlanName')]",
+                "workerSizeId": "[parameters('workerSize')]",
+                "reserved": false,
+                "numberOfWorkers": "1",
+                "hostingEnvironment": "[parameters('hostingEnvironment')]"
+            },
+            "sku": {
+                "Tier": "[parameters('sku')]",
+                "Name": "[parameters('skuCode')]"
+            }
+        }
+    ]
+}

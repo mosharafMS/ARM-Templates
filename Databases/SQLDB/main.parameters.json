@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName":{
+            "value":"marypresentation1"
+        },
+        "privateEndpointSubnetId":{
+            "value": "/subscriptions/96492f75-removed/resourceGroups/Playground/providers/Microsoft.Network/virtualNetworks/cfia/subnets/databases"
+        },
+        "privateZoneId":{
+            "value": "/subscriptions/96492f75-removed/resourceGroups/playground/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
+        },
+        "sqldbUsername":{
+            "value": "adminuser"
+        },
+        "useCMK":{
+            "value": false
+        }
+    }
+}

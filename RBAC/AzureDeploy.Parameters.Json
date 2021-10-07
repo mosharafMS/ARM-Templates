@@ -1,0 +1,14 @@
+{
+       "principalID":{
+           "value": "testtesttest"
+       },
+       "roleDefinitionID":{
+           "value": "ididid"
+       },
+       "scopeLevel":{
+           "value": "subscription"
+       },
+       "managementGroupID":{
+           "value":"testtest"
+       }
+}

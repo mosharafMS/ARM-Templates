@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "CanadaCentral"
+        },
+        "vNETGroupName":{
+            "value": "poc01"
+        }
+        ,
+        "virtualMachineName": {
+            "value": "SqlClient01"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "adminUsername": {
+            "value": "kubo"
+        },
+        "virtualNetworkName": {
+            "value": "demoVnet01"
+        },
+        "subnetName": {
+            "value": "clientsSubNet"
+        },
+        "addPublicIP":{
+         "value":false
+        }
+    }
+}

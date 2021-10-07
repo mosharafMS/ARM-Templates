@@ -1,0 +1,123 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VNetName": {
+            "defaultValue": "demoVnet",
+            "type": "string"
+        },
+        "VnetLocation":{
+            "type": "string",
+            "defaultValue": "CanadaCentral"
+        }
+        ,
+        "subnets_web_name": {
+            "defaultValue": "web",
+            "type": "string"
+        },
+        "subnets_MiddleWare_name": {
+            "defaultValue": "MiddleWare",
+            "type": "string"
+        },
+        "subnets_Restricted_name": {
+            "defaultValue": "Restricted",
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('VNetName')]",
+            "apiVersion": "2017-06-01",
+            "location": "[parameters('VnetLocation')]",
+            "scale": null,
+            "properties": {
+               "addressSpace": {
+                    "addressPrefixes": [
+                        "10.100.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnets_web_name')]",
+                        "properties": {
+
+                            "addressPrefix": "10.100.1.0/24"
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnets_MiddleWare_name')]",
+                        "properties": {
+
+                            "addressPrefix": "10.100.2.0/24"
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnets_Restricted_name')]",
+                        "properties": {
+
+                            "addressPrefix": "10.100.3.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('VNetName'), '/', parameters('subnets_web_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "addressPrefix": "10.100.1.0/24"
+             },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('VNetName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('VNetName'), '/', parameters('subnets_MiddleWare_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "addressPrefix": "10.100.2.0/24"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('VNetName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('VNetName'), '/', parameters('subnets_Restricted_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "addressPrefix": "10.100.3.0/24"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('VNetName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "vnetID":{
+            "type": "string",
+            "value": ""
+        },
+        "subwebID":{
+            "type": "string",
+            "value": ""
+        },
+        "submiddleID":{
+            "type": "string",
+            "value": ""
+        },
+        "subrestrictedID":{
+            "type": "string",
+            "value": ""
+        }
+    }
+}

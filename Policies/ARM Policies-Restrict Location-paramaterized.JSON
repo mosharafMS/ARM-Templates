@@ -1,0 +1,27 @@
+{
+  "properties": {
+    "parameters": {
+      "listOfAllowedLocations": {
+        "type": "array",
+        "metadata": {
+          "description": "An array of permitted locations for resources.",
+          "strongType": "location",
+          "displayName": "List of locations"
+        }
+      }
+    },
+    "displayName": "Geo-compliance policy template",
+    "description": "This policy enables you to restrict the locations your organization can specify when deploying resources. Use to enforce your geo-compliance requirements.",
+    "policyRule": {
+      "if": {
+        "not": {
+          "field": "location",
+          "in": "[parameters('listOfAllowedLocations')]"
+        }
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

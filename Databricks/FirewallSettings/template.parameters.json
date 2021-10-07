@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureFirewalls_playgroundFW_name": {
+            "value": null
+        },
+        "publicIPAddresses_fwIP_externalid": {
+            "value": null
+        },
+        "virtualNetworks_playgroundvnet_externalid": {
+            "value": null
+        }
+    }
+}

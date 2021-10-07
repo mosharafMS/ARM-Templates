@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "FortiGateName": {
+            "value": "<MachineName>"
+        },
+        "adminUsername": {
+            "value": "<yourAdminUser>"
+        },
+        "FortiGateImageSKU": {
+            "value": "fortinet_fg-vm"
+        },
+        "instanceType": {
+            "value": "Standard_F1s"
+        },
+        "publicIPAddressName": {
+            "value": "publicip-fortigate"
+        },
+        "publicIPAddressType": {
+            "value": "Static"
+        },
+        "publicIPNewOrExistingOrNone": {
+            "value": "new"
+        },
+        "publicIPResourceGroup": {
+            "value": "fortigate"
+        },
+        "location": {
+            "value": "canadacentral"
+        },
+        "vnetNewOrExisting": {
+            "value": "new"
+        },
+        "vnetName": {
+            "value": "FortigateProtectedVNet"
+        },
+        "vnetResourceGroup": {
+            "value": "fortigate"
+        },
+        "vnetAddressPrefix": {
+            "value": "10.2.0.0/16"
+        },
+        "Subnet1Name": {
+            "value": "PublicFacingSubnet"
+        },
+        "Subnet1Prefix": {
+            "value": "10.2.0.0/24"
+        },
+        "Subnet2Name": {
+            "value": "InsideSubnet"
+        },
+        "Subnet2Prefix": {
+            "value": "10.2.1.0/24"
+        },
+        "OSDiskName":{
+            "value": "fortigateDisk"
+        }
+
+    }
+}
