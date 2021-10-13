@@ -20,6 +20,16 @@ param privateEndpointSubnetId string
 @description('Private DNS Zone Resource Id.')
 param privateZoneId string
 
+// SQL Vulnerability Scanning
+@description('SQL Vulnerability Scanning - Security Contact email address for alerts.')
+param sqlVulnerabilitySecurityContactEmail string
+
+@description('SQL Vulnerability Scanning - Storage Account Name.')
+param sqlVulnerabilityLoggingStorageAccountName string
+
+@description('SQL Vulnerability Scanning - Storage Account Path to store the vulnerability scan results.')
+param sqlVulnerabilityLoggingStoragePath string
+
 // Credentials
 @description('SQL Database Username.')
 @secure()
@@ -28,6 +38,9 @@ param sqldbUsername string
 @description('SQL Database Password.')
 @secure()
 param sqldbPassword string
+
+@description('Azure AD principal to be the admin for details about it the object details, refer to the parameter file')
+param administrator object
 
 // Azure Key Vault
 @description('Azure Key Vault Resource Group Name.  Required when useCMK=true.')
@@ -50,7 +63,7 @@ module akvKey '../../security/key-vault-key-rsa2048.bicep' = {
   }
 }
 
-resource sqlserver 'Microsoft.Sql/servers@2019-06-01-preview' = {
+resource sqlserver 'Microsoft.Sql/servers@2021-02-01-preview' = {
   tags: tags
   location: resourceGroup().location
   name: sqlServerName
@@ -58,8 +71,9 @@ resource sqlserver 'Microsoft.Sql/servers@2019-06-01-preview' = {
     type: 'SystemAssigned'
   }
   properties: {
-    administratorLogin: sqldbUsername
-    administratorLoginPassword: sqldbPassword
+    administratorLogin: administrator.azureADOnlyAuthentication? json('null') : sqldbUsername 
+    administratorLoginPassword: administrator.azureADOnlyAuthentication? json('null') : sqldbPassword
+    administrators: administrator
     minimalTlsVersion: '1.2'
     publicNetworkAccess: 'Disabled'
   }
@@ -72,6 +86,7 @@ resource sqlserver 'Microsoft.Sql/servers@2019-06-01-preview' = {
     }
   }
   
+  //This audit for Microsoft support operations on the database
   resource sqlserver_devopsAudit 'devOpsAuditingSettings@2020-11-01-preview' = {
     name: 'default'
     properties: {
@@ -89,6 +104,23 @@ resource sqlserver 'Microsoft.Sql/servers@2019-06-01-preview' = {
   }
 }
 
+resource sqlserver_va 'Microsoft.Sql/servers/vulnerabilityAssessments@2020-11-01-preview' = {
+  name: '${sqlServerName}/default'
+  dependsOn: [
+    sqlserver
+    roleAssignSQLToSALogging
+  ]
+  properties: {
+    storageContainerPath: '${sqlVulnerabilityLoggingStoragePath}vulnerability-assessment'
+    recurringScans: {
+      isEnabled: true
+      emailSubscriptionAdmins: true
+      emails: [
+        sqlVulnerabilitySecurityContactEmail
+      ]
+    }
+  }
+}
 
 module akvRoleAssignmentForCMK '../../iam/key-vault-role-assignment-to-sp.bicep' = {
   name: 'rbac-${sqlServerName}-key-vault'
@@ -100,6 +132,14 @@ module akvRoleAssignmentForCMK '../../iam/key-vault-role-assignment-to-sp.bicep'
   }
 }
 
+module roleAssignSQLToSALogging '../../iam/storage-role-assignment-to-sp.bicep' = {
+  name: 'rbac-${sqlServerName}-logging-storage-account'
+  params: {
+    storageAccountName: sqlVulnerabilityLoggingStorageAccountName
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+    resourceSPObjectIds: array(sqlserver.identity.principalId)
+  }
+}
 
 module enableTDE 'sqldb-with-cmk-enable-tde.bicep' = {
   dependsOn: [

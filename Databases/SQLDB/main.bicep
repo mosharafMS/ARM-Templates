@@ -20,7 +20,20 @@ param privateEndpointSubnetId string
 @description('Private DNS Zone Resource Id.')
 param privateZoneId string
 
-// Credentials
+// SQL Vulnerability Scanning
+@description('SQL Vulnerability Scanning - Security Contact email address for alerts.')
+param sqlVulnerabilitySecurityContactEmail string
+
+@description('SQL Vulnerability Scanning - Storage Account Name.')
+param sqlVulnerabilityLoggingStorageAccountName string
+
+@description('SQL Vulnerability Scanning - Storage Account Path to store the vulnerability scan results.')
+param sqlVulnerabilityLoggingStoragePath string
+
+//Credentials
+@description('Azure AD principal to be the admin for details about it the object details, refer to the parameter file')
+param administrator object
+
 @description('SQL Database Username.')
 @secure()
 param sqldbUsername string
@@ -34,11 +47,13 @@ param sqldbPassword string
 param useCMK bool
 
 // Azure Key Vault
-@description('Azure Key Vault Resource Group Name.  Required when useCMK=true.')
+@description('Azure Key Vault Resource Group Name(existing).  Required when useCMK=true.')
 param akvResourceGroupName string
 
-@description('Azure Key Vault Name.  Required when useCMK=true.')
+@description('Azure Key Vault Name (existing).  Required when useCMK=true.')
 param akvName string
+
+
 
 // SQL Server without Customer Managed Key
 module sqldbWithoutCMK 'sqldb-without-cmk.bicep' = if (!useCMK) {
@@ -48,10 +63,15 @@ module sqldbWithoutCMK 'sqldb-without-cmk.bicep' = if (!useCMK) {
 
     privateEndpointSubnetId: privateEndpointSubnetId
     privateZoneId: privateZoneId
+
+    sqlVulnerabilitySecurityContactEmail: sqlVulnerabilitySecurityContactEmail
+
+    sqlVulnerabilityLoggingStorageAccountName: sqlVulnerabilityLoggingStorageAccountName
+    sqlVulnerabilityLoggingStoragePath: sqlVulnerabilityLoggingStoragePath
   
     sqldbUsername: sqldbUsername
     sqldbPassword: sqldbPassword
-
+    administrator: administrator
     tags: tags
   }
 }
@@ -64,9 +84,15 @@ module sqldbWithCMK 'sqldb-with-cmk.bicep' = if (useCMK) {
 
     privateEndpointSubnetId: privateEndpointSubnetId
     privateZoneId: privateZoneId
+
+    sqlVulnerabilitySecurityContactEmail: sqlVulnerabilitySecurityContactEmail
+
+    sqlVulnerabilityLoggingStorageAccountName: sqlVulnerabilityLoggingStorageAccountName
+    sqlVulnerabilityLoggingStoragePath: sqlVulnerabilityLoggingStoragePath
     
     sqldbUsername: sqldbUsername
     sqldbPassword: sqldbPassword
+    administrator: administrator
 
     tags: tags
 
@@ -74,6 +100,7 @@ module sqldbWithCMK 'sqldb-with-cmk.bicep' = if (useCMK) {
     akvName: akvName
   }
 }
+
 
 // Outputs
 output sqlDbFqdn string = useCMK ? sqldbWithCMK.outputs.sqlDbFqdn : sqldbWithoutCMK.outputs.sqlDbFqdn

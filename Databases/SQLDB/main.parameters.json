@@ -6,16 +6,42 @@
             "value":"marypresentation1"
         },
         "privateEndpointSubnetId":{
-            "value": "/subscriptions/96492f75-removed/resourceGroups/Playground/providers/Microsoft.Network/virtualNetworks/cfia/subnets/databases"
+            "value": "/subscriptions/96492f75<removed>/resourceGroups/Playground/providers/Microsoft.Network/virtualNetworks/cfia/subnets/databases"
         },
         "privateZoneId":{
-            "value": "/subscriptions/96492f75-removed/resourceGroups/playground/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
+            "value": "/subscriptions/96492f75<removed>/resourceGroups/playground/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
         },
         "sqldbUsername":{
-            "value": "adminuser"
+            "value": "<admin user name>"
         },
         "useCMK":{
             "value": false
+        },
+        "akvResourceGroupName":{
+            "value": "playground"
+        },
+        "akvName":{
+            "value": "<key vault name>"
+        },
+        "sqlVulnerabilityLoggingStorageAccountName":{
+            "value": "<name of the VA storage account>"
+        },
+        "sqlVulnerabilityLoggingStoragePath":{
+            "value": "<full path in the form https://<account name>.blob.core.windows.net/<container> >"
+        },
+        "sqlVulnerabilitySecurityContactEmail":{
+            "value": "<email>"
+        },
+        "administrator": {
+            "value": {
+                "administratorType": "activeDirectory",
+                "login": "<principal name>",
+                "sid": "<sid of the principal>",
+                "tenantId": "<tenant id>",
+                "azureADOnlyAuthentication": true,
+                "principalType": "User"
+            }
         }
+
     }
 }
