@@ -3,22 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlServerName":{
-            "value":"marypresentation1"
+            "value":"<server name>"
         },
         "privateEndpointSubnetId":{
-            "value": "/subscriptions/96492f75<removed>/resourceGroups/Playground/providers/Microsoft.Network/virtualNetworks/cfia/subnets/databases"
+            "value": "/subscriptions/96492f75-<removed>/resourceGroups/<resource group>/providers/Microsoft.Network/virtualNetworks/cfia/subnets/databases"
         },
         "privateZoneId":{
-            "value": "/subscriptions/96492f75<removed>/resourceGroups/playground/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
+            "value": "/subscriptions/96492f75-<removed>/resourceGroups/<resource group>/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
         },
-        "sqldbUsername":{
-            "value": "<admin user name>"
+        "sqlAuthenticationUsername":{
+            "value": "<sql user name>"
         },
         "useCMK":{
-            "value": false
+            "value": true
         },
         "akvResourceGroupName":{
-            "value": "playground"
+            "value": "<resource group>"
         },
         "akvName":{
             "value": "<key vault name>"
@@ -32,15 +32,17 @@
         "sqlVulnerabilitySecurityContactEmail":{
             "value": "<email>"
         },
-        "administrator": {
-            "value": {
-                "administratorType": "activeDirectory",
-                "login": "<principal name>",
-                "sid": "<sid of the principal>",
-                "tenantId": "<tenant id>",
-                "azureADOnlyAuthentication": true,
-                "principalType": "User"
-            }
+        "aadAuthenticationOnly":{
+            "value": false
+        },
+        "aadLoginName":{
+            "value": "<principal name>"
+        },
+        "aadLoginObjectID":{
+            "value": "<sid of the principal>"
+        },
+        "aadLoginType":{
+            "value": "<User, Group, Application>"
         }
 
     }
