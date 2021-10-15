@@ -1,0 +1,42 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Assign a name for the Log Analytic Workspace Name"
+            }
+        },
+        "LogAnalyticsWorkspaceRegion": {
+            "type": "string",
+            "defaultValue": "Canada Central",
+            "allowedValues": [
+                "East US",
+                "West Europe",
+                "Canada Central"
+            ],
+            "metadata": {
+                "description": "Specify the region for your Workspace"
+            }
+        }
+    },
+   "resources": [
+        {
+            "apiVersion": "2017-03-15-preview",
+            "location": "[parameters('LogAnalyticsWorkspaceRegion')]",
+            "name": "[parameters('LogAnalyticsWorkspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "comments": "Log Analytics workspace",
+            "properties": {
+                "sku": {
+                        "name": "free"
+                    },
+                "retentionInDays": 7
+                },
+            "resources": [
+            ]
+        }
+    ],
+    "outputs": {}
+}

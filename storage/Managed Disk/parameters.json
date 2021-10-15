@@ -1,0 +1,19 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Diskname":{
+            "value": "test01"
+        },
+        "accountType":{
+            "value": "Premium_LRS"
+        },
+        "diskSizeGB":{
+            "value": "32"
+        },
+        "location":{
+            "value": "CanadaCentral"
+        }
+
+    }
+}

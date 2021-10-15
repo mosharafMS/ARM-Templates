@@ -1,0 +1,35 @@
+{
+"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+"param1":{
+    "type":"string",
+    "defaultValue":"a"
+},
+"param2":{
+    "type":"string",
+    "defaultValue":"b"
+},
+"secret01":{
+    "type": "securestring"
+}
+},
+"variables":{
+    "dnsArray":[
+        "[parameters('param1')]","[parameters('param2')]"
+    ]
+},
+"resources": [
+    
+],
+"outputs": {
+   "outputvalue":{ 
+       "type":"array",
+       "value": "[variables('dnsArray')]"
+},
+"secretValue":{
+    "type": "string",
+    "value": "[parameters('secret01')]"
+}
+}
+}

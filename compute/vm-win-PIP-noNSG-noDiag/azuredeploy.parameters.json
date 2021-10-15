@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "CanadaCentral"
+        },
+        "vNETGroupName":{
+            "value": "nrc"
+        }
+        ,
+        "virtualMachineName": {
+            "value": "winClient02"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "adminUsername": {
+            "value": "kubo"
+        },
+        "virtualNetworkName": {
+            "value": "demoVnet01"
+        },
+        "subnetName": {
+            "value": "webSubNet"
+        },
+        "addPublicIP":{
+         "value":true
+        }
+    }
+}

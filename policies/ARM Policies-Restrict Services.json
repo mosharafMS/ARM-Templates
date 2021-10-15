@@ -1,0 +1,58 @@
+{
+  "Properties": {
+    "mode": "all",
+    "displayName": "Restrict Services",
+    "description": "some description",
+    "policyRule": {
+      "if": {
+        "not": {
+          "anyOf": [
+            {
+              "field": "type",
+              "Equals": "Microsoft.Compute/virtualMachines"
+            },
+            {
+              "field": "type",
+              "Equals": "Microsoft.Network/expressRouteCircuits"
+            },
+            {
+              "field": "type",
+              "Equals": "Microsoft.Network/virtualNetworkGateways"
+            },
+            {
+              "field": "type",
+              "Like": "Microsoft.Storage/*"
+            },
+            {
+              "field": "type",
+              "Equals": "Microsoft.Network/virtualNetworks"
+            },
+            {
+              "field": "type",
+              "Equals": "Microsoft.RecoveryServices/vaults"
+            },
+            {
+              "field": "type",
+              "Like": "Microsoft.DevTestLab/*"
+            },
+            {
+              "field": "type",
+              "Like": "Microsoft.KeyVault/*"
+            },
+            {
+              "field": "type",
+              "Like": "Microsoft.AppService/*"
+            },
+            {
+              "field": "type",
+              "Like": "Microsoft.Sql/*"
+            }
+          ]
+        }
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

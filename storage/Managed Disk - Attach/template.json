@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DisknamePrefix": {
+            "type": "string"
+        },
+        "diskType": {
+            "type": "string"
+        },
+        "diskSizeGB": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "VirtualMachineName":{
+            "type": "string"
+        },
+        "NumberOfDisks":{
+            "type": "int"
+        },
+        "lastUsedLUN":{
+            "type":"int",
+            "defaultValue": -1
+        }
+    },
+    "variables": {
+        "apiVersion":"2018-06-01"
+    },
+    "resources": [
+        {
+            "apiVersion": "[variables('apiVersion')]",
+            "type": "Microsoft.Compute/disks",
+            "name": "[concat(parameters('DisknamePrefix'),'_',copyIndex())]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "creationData": {
+                    "createOption": "Empty"
+                },
+                "diskSizeGB": "[parameters('diskSizeGB')]"
+            },
+            "sku": {
+                "name": "[parameters('diskType')]"
+            },
+            "copy": {
+                "name": "DiskCopy",
+                "count":"[parameters('NumberOfDisks')]"
+            }
+        },
+        {
+            "name": "[parameters('VirtualMachineName')]",
+            "comments": "The VM has to be in the same resource group as the disk-to be improved to allow different RG",
+            "type": "Microsoft.Compute/virtualMachines",
+            "dependsOn": [
+              "DiskCopy"
+             ],
+            "location":"[parameters('location')]",
+            "apiVersion": "2018-06-01",
+            "id":"[resourceId('Microsoft.Compute/virtualMachines',parameters('VirtualMachineName'))]",
+               "properties": {
+              "storageProfile": {
+                "copy":[{
+                    "name":"dataDisks",
+                    "count":"[parameters('NumberOfDisks')]",
+                    "input":{
+                        "lun": "[add(copyIndex('dataDisks'),add(parameters('lastUsedLUN'),1))]",
+                        "createOption":"Attach",
+                        "managedDisk": {
+                        "id": "[resourceId('Microsoft.Compute/disks',concat(parameters('DisknamePrefix'),'_',copyIndex('dataDisks')))]"
+                        }
+                    }
+                  }]
+              }
+            },
+            "resources": []
+          }
+
+    ]
+}

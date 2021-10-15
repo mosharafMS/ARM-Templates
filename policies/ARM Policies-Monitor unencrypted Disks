@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "mode": "all",
+    "displayName": "Monitor unencrypted disks",
+    "description": "List all the disks that are not encrypted. Works on managed disks only",
+    "policyRule": {
+      "if": {
+        "not": {
+          "field": "location",
+          "in": "[parameters('allowedLocations')]"
+        }
+      },
+      "then": {
+        "effect": "AuditIfNotExists"
+      }
+    }
+  }
+}
