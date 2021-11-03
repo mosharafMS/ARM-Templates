@@ -1,0 +1,20 @@
+{
+    "id": "",
+    "properties": {
+        "roleName": "ADFPipelineExecuter",
+        "description": "Grants access rune Azure Data Factory pipelines",
+        "assignableScopes": [
+            "/providers/Microsoft.Management/managementGroups/{management group}"
+        ],
+        "permissions": [
+            {
+                "actions": [
+                    "Microsoft.DataFactory/factories/pipelines/createrun/action"
+                ],
+                "notActions": [],
+                "dataActions": [],
+                "notDataActions": []
+            }
+        ]
+    }
+}
