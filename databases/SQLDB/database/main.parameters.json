@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseName":{
+            "value":"testingdb05"
+        },
+        "logicalServerName":{
+            "value":"logicalServer"
+        },
+        "collation":{
+            "value":"SQL_Latin1_General_CP1_CI_AS"
+        },
+        "location":{
+            "value":"canadaCentral"
+        },
+        "sku":{
+            "value":{
+                "name":"GP_Gen5_2",
+                "size":"2GB",
+                "capacity":2
+            }
+        }
+    }
+}
