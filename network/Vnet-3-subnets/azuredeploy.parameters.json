@@ -10,13 +10,13 @@
             "value": "CanadaCentral"
         },
         "subnets_web_name": {
-            "value": "webSubNet"
+            "value": "workstations"
         },
         "subnets_MiddleWare_name": {
-            "value": "AppSubNet"
+            "value": "dbricks-subnetA"
         },
         "subnets_Restricted_name": {
-            "value": "DatabaseSubNet"
+            "value": "dbricks-subnetB"
         }
     }
 }

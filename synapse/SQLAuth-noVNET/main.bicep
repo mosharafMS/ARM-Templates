@@ -1,13 +1,12 @@
-param workspaceName string = 'synapseTest01'
-param sqlAdminLogin string = 'sqladminuser'
-param sqlAdminPass string {
-  secure: true
-}
+param workspaceName string
+param sqlAdminLogin string
+@secure()
+param sqlAdminPass string 
 param currentUTC string =utcNow()
 param location string = resourceGroup().location
 
 resource storage 'Microsoft.Storage/storageAccounts@2020-08-01-preview'={
-  name:concat(toLower(workspaceName),'strg',toLower(substring(uniqueString(currentUTC),0,3)))
+  name:'${toLower(workspaceName)}strg${toLower(substring(uniqueString(currentUTC),0,3))}'
   location: location
   kind:'StorageV2'
   sku:{
@@ -33,7 +32,7 @@ properties:{
   }
   sqlAdministratorLogin:sqlAdminLogin
   sqlAdministratorLoginPassword : sqlAdminPass
-  managedResourceGroupName: concat(workspaceName,'_managed')
+  managedResourceGroupName: '${workspaceName}_managed'
 }
 }
 

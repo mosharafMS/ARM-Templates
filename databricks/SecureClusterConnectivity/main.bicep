@@ -24,7 +24,7 @@ param location string = resourceGroup().location
 @description('Name of the managed Resource Group controlled by the workspace')
 param managedResourceGroup string = '${workspaceName}_managed'
 
-param loadBalancerId string 
+
 
 var managedResourceGroupId = '${subscription().id}/resourceGroups/${managedResourceGroup}'
 
@@ -49,9 +49,7 @@ resource workspaceName_resource 'Microsoft.Databricks/workspaces@2018-04-01' = {
       enableNoPublicIp:{
         value:true
       }
-      loadBalancerId:{
-        value:loadBalancerId
-      }
+     
 
     }
   }
