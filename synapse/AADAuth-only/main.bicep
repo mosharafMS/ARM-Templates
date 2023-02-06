@@ -24,7 +24,7 @@ param aadLoginObjectID string=''
 param aadLoginType string = 'Group'
 
 resource storage 'Microsoft.Storage/storageAccounts@2020-08-01-preview'={
-  name:'${toLower(workspaceName)}strg${toLower(substring(uniqueString(currentUTC),0,3))}'
+  name:'${toLower(workspaceName)}strg${toLower(substring(uniqueString(resourceGroup().name),0,3))}'
   tags: tags
   location: location
   kind:'StorageV2'
@@ -41,6 +41,9 @@ resource storage 'Microsoft.Storage/storageAccounts@2020-08-01-preview'={
 resource synapseWorkspace 'Microsoft.Synapse/workspaces@2021-06-01'={
 name: toLower(workspaceName)
 tags: tags
+dependsOn: [
+  storage
+]
 location: location
 identity : {
   type: 'SystemAssigned'
@@ -62,5 +65,16 @@ resource aadAuth 'administrators@2021-06-01'={
     tenantId: subscription().tenantId
   }
 }
+resource dedicatedSqlPool 'sqlPools@2021-06-01'={
+  name: 'dedicatedSqlPool'
+  location: location
+  properties:{
+    createMode: 'Default'
+    collation: 'SQL_Latin1_General_CP1_CI_AS'
+    sku:{
+      name: 'DW100c'
+      tier: 'DataWarehouse'
+    }
+  }
 }
-
+}
